@@ -38,6 +38,25 @@ bool MsgSpeedStatus_encode(const MsgSpeedStatus_t *msg, uint8_t *data, uint8_t d
     return true;
 }
 
+bool MsgSpeedStatus_send(const MsgSpeedStatus_t *msg)
+{
+    uint8_t data[MSGSPEEDSTATUS_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgSpeedStatus_t *)0) ||
+        (!(((double)msg->SpeedActual >= -2147483648) && ((double)msg->SpeedActual <= 2147483647))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgSpeedStatus_encode(msg, data, MSGSPEEDSTATUS_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGSPEEDSTATUS_CAN_ID, true, data, MSGSPEEDSTATUS_CAN_DLC);
+}
+
 bool MsgSpeedSourceStatus_decode(const uint8_t *data, uint8_t dlc, MsgSpeedSourceStatus_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgSpeedSourceStatus_t *)0) || (dlc < MSGSPEEDSOURCESTATUS_CAN_DLC))
@@ -64,6 +83,17 @@ bool MsgSpeedSourceStatus_encode(const MsgSpeedSourceStatus_t *msg, uint8_t *dat
     data[0] |= (uint8_t)(((((uint64_t)msg->SpeedSource) >> 0) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgSpeedSourceStatus_send(const MsgSpeedSourceStatus_t *msg)
+{
+    uint8_t data[MSGSPEEDSOURCESTATUS_CAN_DLC];
+
+    if (!MsgSpeedSourceStatus_encode(msg, data, MSGSPEEDSOURCESTATUS_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGSPEEDSOURCESTATUS_CAN_ID, true, data, MSGSPEEDSOURCESTATUS_CAN_DLC);
 }
 
 bool MsgHeightStatus_decode(const uint8_t *data, uint8_t dlc, MsgHeightStatus_t *msg)
@@ -109,6 +139,27 @@ bool MsgHeightStatus_encode(const MsgHeightStatus_t *msg, uint8_t *data, uint8_t
     return true;
 }
 
+bool MsgHeightStatus_send(const MsgHeightStatus_t *msg)
+{
+    uint8_t data[MSGHEIGHTSTATUS_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgHeightStatus_t *)0) ||
+        (!(((double)msg->HeightActual >= 0) && ((double)msg->HeightActual <= 65535))) ||
+        (!(((double)msg->HeightActualSensor1 >= 0) && ((double)msg->HeightActualSensor1 <= 65535))) ||
+        (!(((double)msg->HeightActualSensor2 >= 0) && ((double)msg->HeightActualSensor2 <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgHeightStatus_encode(msg, data, MSGHEIGHTSTATUS_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGHEIGHTSTATUS_CAN_ID, true, data, MSGHEIGHTSTATUS_CAN_DLC);
+}
+
 bool MsgCounterStatus_decode(const uint8_t *data, uint8_t dlc, MsgCounterStatus_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgCounterStatus_t *)0) || (dlc < MSGCOUNTERSTATUS_CAN_DLC))
@@ -149,6 +200,26 @@ bool MsgCounterStatus_encode(const MsgCounterStatus_t *msg, uint8_t *data, uint8
     return true;
 }
 
+bool MsgCounterStatus_send(const MsgCounterStatus_t *msg)
+{
+    uint8_t data[MSGCOUNTERSTATUS_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgCounterStatus_t *)0) ||
+        (!(((double)msg->TripTotalPlants >= 0) && ((double)msg->TripTotalPlants <= 4294967295))) ||
+        (!(((double)msg->TotalPlants >= 0) && ((double)msg->TotalPlants <= 4294967295))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgCounterStatus_encode(msg, data, MSGCOUNTERSTATUS_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGCOUNTERSTATUS_CAN_ID, true, data, MSGCOUNTERSTATUS_CAN_DLC);
+}
+
 bool MsgMachineStatus_decode(const uint8_t *data, uint8_t dlc, MsgMachineStatus_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgMachineStatus_t *)0) || (dlc < MSGMACHINESTATUS_CAN_DLC))
@@ -175,6 +246,17 @@ bool MsgMachineStatus_encode(const MsgMachineStatus_t *msg, uint8_t *data, uint8
     data[0] |= (uint8_t)(((((uint64_t)msg->MachineStatus) >> 0) & UINT64_C(0xF)) << 0);
 
     return true;
+}
+
+bool MsgMachineStatus_send(const MsgMachineStatus_t *msg)
+{
+    uint8_t data[MSGMACHINESTATUS_CAN_DLC];
+
+    if (!MsgMachineStatus_encode(msg, data, MSGMACHINESTATUS_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGMACHINESTATUS_CAN_ID, true, data, MSGMACHINESTATUS_CAN_DLC);
 }
 
 bool MsgRaiseLowerStatus_decode(const uint8_t *data, uint8_t dlc, MsgRaiseLowerStatus_t *msg)
@@ -211,6 +293,26 @@ bool MsgRaiseLowerStatus_encode(const MsgRaiseLowerStatus_t *msg, uint8_t *data,
     return true;
 }
 
+bool MsgRaiseLowerStatus_send(const MsgRaiseLowerStatus_t *msg)
+{
+    uint8_t data[MSGRAISELOWERSTATUS_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgRaiseLowerStatus_t *)0) ||
+        (!(((double)msg->RaiseActive >= 0) && ((double)msg->RaiseActive <= 1))) ||
+        (!(((double)msg->LowerActive >= 0) && ((double)msg->LowerActive <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgRaiseLowerStatus_encode(msg, data, MSGRAISELOWERSTATUS_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGRAISELOWERSTATUS_CAN_ID, true, data, MSGRAISELOWERSTATUS_CAN_DLC);
+}
+
 bool MsgEdgeDetectionStatus_decode(const uint8_t *data, uint8_t dlc, MsgEdgeDetectionStatus_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgEdgeDetectionStatus_t *)0) || (dlc < MSGEDGEDETECTIONSTATUS_CAN_DLC))
@@ -245,6 +347,25 @@ bool MsgEdgeDetectionStatus_encode(const MsgEdgeDetectionStatus_t *msg, uint8_t 
     return true;
 }
 
+bool MsgEdgeDetectionStatus_send(const MsgEdgeDetectionStatus_t *msg)
+{
+    uint8_t data[MSGEDGEDETECTIONSTATUS_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgEdgeDetectionStatus_t *)0) ||
+        (!(((double)msg->EdgeDetectionStatus >= 0) && ((double)msg->EdgeDetectionStatus <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgEdgeDetectionStatus_encode(msg, data, MSGEDGEDETECTIONSTATUS_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGEDGEDETECTIONSTATUS_CAN_ID, true, data, MSGEDGEDETECTIONSTATUS_CAN_DLC);
+}
+
 bool MsgAutoControlActive_decode(const uint8_t *data, uint8_t dlc, MsgAutoControlActive_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgAutoControlActive_t *)0) || (dlc < MSGAUTOCONTROLACTIVE_CAN_DLC))
@@ -271,6 +392,17 @@ bool MsgAutoControlActive_encode(const MsgAutoControlActive_t *msg, uint8_t *dat
     data[0] |= (uint8_t)(((((uint64_t)msg->AutoControlActive) >> 0) & UINT64_C(0x3)) << 0);
 
     return true;
+}
+
+bool MsgAutoControlActive_send(const MsgAutoControlActive_t *msg)
+{
+    uint8_t data[MSGAUTOCONTROLACTIVE_CAN_DLC];
+
+    if (!MsgAutoControlActive_encode(msg, data, MSGAUTOCONTROLACTIVE_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGAUTOCONTROLACTIVE_CAN_ID, true, data, MSGAUTOCONTROLACTIVE_CAN_DLC);
 }
 
 bool MsgPlantWheelSpeed_decode(const uint8_t *data, uint8_t dlc, MsgPlantWheelSpeed_t *msg)
@@ -300,6 +432,25 @@ bool MsgPlantWheelSpeed_encode(const MsgPlantWheelSpeed_t *msg, uint8_t *data, u
     data[1] |= (uint8_t)(((((uint64_t)(((double)msg->PlantwheelSpeed - 0) / 0.1)) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgPlantWheelSpeed_send(const MsgPlantWheelSpeed_t *msg)
+{
+    uint8_t data[MSGPLANTWHEELSPEED_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgPlantWheelSpeed_t *)0) ||
+        (!(((double)msg->PlantwheelSpeed >= 0) && ((double)msg->PlantwheelSpeed <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgPlantWheelSpeed_encode(msg, data, MSGPLANTWHEELSPEED_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGPLANTWHEELSPEED_CAN_ID, true, data, MSGPLANTWHEELSPEED_CAN_DLC);
 }
 
 bool MsgSpeedSetpointCommand_decode(const uint8_t *data, uint8_t dlc, MsgSpeedSetpointCommand_t *msg)
@@ -333,6 +484,25 @@ bool MsgSpeedSetpointCommand_encode(const MsgSpeedSetpointCommand_t *msg, uint8_
     return true;
 }
 
+bool MsgSpeedSetpointCommand_send(const MsgSpeedSetpointCommand_t *msg)
+{
+    uint8_t data[MSGSPEEDSETPOINTCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgSpeedSetpointCommand_t *)0) ||
+        (!(((double)msg->SpeedSetpoint >= -2147483648) && ((double)msg->SpeedSetpoint <= 2147483647))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgSpeedSetpointCommand_encode(msg, data, MSGSPEEDSETPOINTCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGSPEEDSETPOINTCOMMAND_CAN_ID, true, data, MSGSPEEDSETPOINTCOMMAND_CAN_DLC);
+}
+
 bool MsgPlantSpacingCommand_decode(const uint8_t *data, uint8_t dlc, MsgPlantSpacingCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgPlantSpacingCommand_t *)0) || (dlc < MSGPLANTSPACINGCOMMAND_CAN_DLC))
@@ -360,6 +530,25 @@ bool MsgPlantSpacingCommand_encode(const MsgPlantSpacingCommand_t *msg, uint8_t 
     data[1] |= (uint8_t)(((((uint64_t)msg->PlantSpacingSetpoint) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgPlantSpacingCommand_send(const MsgPlantSpacingCommand_t *msg)
+{
+    uint8_t data[MSGPLANTSPACINGCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgPlantSpacingCommand_t *)0) ||
+        (!(((double)msg->PlantSpacingSetpoint >= 0) && ((double)msg->PlantSpacingSetpoint <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgPlantSpacingCommand_encode(msg, data, MSGPLANTSPACINGCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGPLANTSPACINGCOMMAND_CAN_ID, true, data, MSGPLANTSPACINGCOMMAND_CAN_DLC);
 }
 
 bool MsgHeightSetpointCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightSetpointCommand_t *msg)
@@ -391,6 +580,25 @@ bool MsgHeightSetpointCommand_encode(const MsgHeightSetpointCommand_t *msg, uint
     return true;
 }
 
+bool MsgHeightSetpointCommand_send(const MsgHeightSetpointCommand_t *msg)
+{
+    uint8_t data[MSGHEIGHTSETPOINTCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgHeightSetpointCommand_t *)0) ||
+        (!(((double)msg->HeightSetpoint >= 0) && ((double)msg->HeightSetpoint <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgHeightSetpointCommand_encode(msg, data, MSGHEIGHTSETPOINTCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGHEIGHTSETPOINTCOMMAND_CAN_ID, true, data, MSGHEIGHTSETPOINTCOMMAND_CAN_DLC);
+}
+
 bool MsgHeightDetectCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightDetectCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgHeightDetectCommand_t *)0) || (dlc < MSGHEIGHTDETECTCOMMAND_CAN_DLC))
@@ -417,6 +625,25 @@ bool MsgHeightDetectCommand_encode(const MsgHeightDetectCommand_t *msg, uint8_t 
     data[0] |= (uint8_t)(((((uint64_t)msg->HeightDetect) >> 0) & UINT64_C(0x1)) << 0);
 
     return true;
+}
+
+bool MsgHeightDetectCommand_send(const MsgHeightDetectCommand_t *msg)
+{
+    uint8_t data[MSGHEIGHTDETECTCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgHeightDetectCommand_t *)0) ||
+        (!(((double)msg->HeightDetect >= 0) && ((double)msg->HeightDetect <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgHeightDetectCommand_encode(msg, data, MSGHEIGHTDETECTCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGHEIGHTDETECTCOMMAND_CAN_ID, true, data, MSGHEIGHTDETECTCOMMAND_CAN_DLC);
 }
 
 bool MsgWheelCircumCommand_decode(const uint8_t *data, uint8_t dlc, MsgWheelCircumCommand_t *msg)
@@ -446,6 +673,25 @@ bool MsgWheelCircumCommand_encode(const MsgWheelCircumCommand_t *msg, uint8_t *d
     data[1] |= (uint8_t)(((((uint64_t)msg->WheelCircum) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgWheelCircumCommand_send(const MsgWheelCircumCommand_t *msg)
+{
+    uint8_t data[MSGWHEELCIRCUMCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWheelCircumCommand_t *)0) ||
+        (!(((double)msg->WheelCircum >= 0) && ((double)msg->WheelCircum <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWheelCircumCommand_encode(msg, data, MSGWHEELCIRCUMCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWHEELCIRCUMCOMMAND_CAN_ID, true, data, MSGWHEELCIRCUMCOMMAND_CAN_DLC);
 }
 
 bool MsgHeightCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightCommand_t *msg)
@@ -480,6 +726,26 @@ bool MsgHeightCommand_encode(const MsgHeightCommand_t *msg, uint8_t *data, uint8
     data[0] |= (uint8_t)(((((uint64_t)msg->DownButton) >> 0) & UINT64_C(0x1)) << 1);
 
     return true;
+}
+
+bool MsgHeightCommand_send(const MsgHeightCommand_t *msg)
+{
+    uint8_t data[MSGHEIGHTCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgHeightCommand_t *)0) ||
+        (!(((double)msg->UpButton >= 0) && ((double)msg->UpButton <= 1))) ||
+        (!(((double)msg->DownButton >= 0) && ((double)msg->DownButton <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgHeightCommand_encode(msg, data, MSGHEIGHTCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGHEIGHTCOMMAND_CAN_ID, true, data, MSGHEIGHTCOMMAND_CAN_DLC);
 }
 
 bool MsgLiftSpeedCommand_decode(const uint8_t *data, uint8_t dlc, MsgLiftSpeedCommand_t *msg)
@@ -518,6 +784,26 @@ bool MsgLiftSpeedCommand_encode(const MsgLiftSpeedCommand_t *msg, uint8_t *data,
     return true;
 }
 
+bool MsgLiftSpeedCommand_send(const MsgLiftSpeedCommand_t *msg)
+{
+    uint8_t data[MSGLIFTSPEEDCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgLiftSpeedCommand_t *)0) ||
+        (!(((double)msg->SpeedRaise >= 0) && ((double)msg->SpeedRaise <= 65535))) ||
+        (!(((double)msg->SpeedLower >= 0) && ((double)msg->SpeedLower <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgLiftSpeedCommand_encode(msg, data, MSGLIFTSPEEDCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGLIFTSPEEDCOMMAND_CAN_ID, true, data, MSGLIFTSPEEDCOMMAND_CAN_DLC);
+}
+
 bool MsgConfigCommand_decode(const uint8_t *data, uint8_t dlc, MsgConfigCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgConfigCommand_t *)0) || (dlc < MSGCONFIGCOMMAND_CAN_DLC))
@@ -546,6 +832,25 @@ bool MsgConfigCommand_encode(const MsgConfigCommand_t *msg, uint8_t *data, uint8
     return true;
 }
 
+bool MsgConfigCommand_send(const MsgConfigCommand_t *msg)
+{
+    uint8_t data[MSGCONFIGCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgConfigCommand_t *)0) ||
+        (!(((double)msg->ResetPlantCounter >= 0) && ((double)msg->ResetPlantCounter <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgConfigCommand_encode(msg, data, MSGCONFIGCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGCONFIGCOMMAND_CAN_ID, true, data, MSGCONFIGCOMMAND_CAN_DLC);
+}
+
 bool MsgNrRowsCommand_decode(const uint8_t *data, uint8_t dlc, MsgNrRowsCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgNrRowsCommand_t *)0) || (dlc < MSGNRROWSCOMMAND_CAN_DLC))
@@ -572,6 +877,25 @@ bool MsgNrRowsCommand_encode(const MsgNrRowsCommand_t *msg, uint8_t *data, uint8
     data[0] |= (uint8_t)(((((uint64_t)msg->NrRows) >> 0) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgNrRowsCommand_send(const MsgNrRowsCommand_t *msg)
+{
+    uint8_t data[MSGNRROWSCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgNrRowsCommand_t *)0) ||
+        (!(((double)msg->NrRows >= 0) && ((double)msg->NrRows <= 255))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgNrRowsCommand_encode(msg, data, MSGNRROWSCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGNRROWSCOMMAND_CAN_ID, true, data, MSGNRROWSCOMMAND_CAN_DLC);
 }
 
 bool MsgWorkWidthCommand_decode(const uint8_t *data, uint8_t dlc, MsgWorkWidthCommand_t *msg)
@@ -603,6 +927,25 @@ bool MsgWorkWidthCommand_encode(const MsgWorkWidthCommand_t *msg, uint8_t *data,
     return true;
 }
 
+bool MsgWorkWidthCommand_send(const MsgWorkWidthCommand_t *msg)
+{
+    uint8_t data[MSGWORKWIDTHCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWorkWidthCommand_t *)0) ||
+        (!(((double)msg->WorkWidth >= 0) && ((double)msg->WorkWidth <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWorkWidthCommand_encode(msg, data, MSGWORKWIDTHCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWORKWIDTHCOMMAND_CAN_ID, true, data, MSGWORKWIDTHCOMMAND_CAN_DLC);
+}
+
 bool MsgHeightThresholdCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightThresholdCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgHeightThresholdCommand_t *)0) || (dlc < MSGHEIGHTTHRESHOLDCOMMAND_CAN_DLC))
@@ -632,6 +975,25 @@ bool MsgHeightThresholdCommand_encode(const MsgHeightThresholdCommand_t *msg, ui
     return true;
 }
 
+bool MsgHeightThresholdCommand_send(const MsgHeightThresholdCommand_t *msg)
+{
+    uint8_t data[MSGHEIGHTTHRESHOLDCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgHeightThresholdCommand_t *)0) ||
+        (!(((double)msg->HeightDetectThreshold >= 0) && ((double)msg->HeightDetectThreshold <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgHeightThresholdCommand_encode(msg, data, MSGHEIGHTTHRESHOLDCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGHEIGHTTHRESHOLDCOMMAND_CAN_ID, true, data, MSGHEIGHTTHRESHOLDCOMMAND_CAN_DLC);
+}
+
 bool MsgWaterTimeCommand_decode(const uint8_t *data, uint8_t dlc, MsgWaterTimeCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgWaterTimeCommand_t *)0) || (dlc < MSGWATERTIMECOMMAND_CAN_DLC))
@@ -659,6 +1021,25 @@ bool MsgWaterTimeCommand_encode(const MsgWaterTimeCommand_t *msg, uint8_t *data,
     data[1] |= (uint8_t)(((((uint64_t)msg->WaterTime) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgWaterTimeCommand_send(const MsgWaterTimeCommand_t *msg)
+{
+    uint8_t data[MSGWATERTIMECOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWaterTimeCommand_t *)0) ||
+        (!(((double)msg->WaterTime >= 0) && ((double)msg->WaterTime <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWaterTimeCommand_encode(msg, data, MSGWATERTIMECOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWATERTIMECOMMAND_CAN_ID, true, data, MSGWATERTIMECOMMAND_CAN_DLC);
 }
 
 bool MsgWaterOffsetCommand_decode(const uint8_t *data, uint8_t dlc, MsgWaterOffsetCommand_t *msg)
@@ -697,6 +1078,26 @@ bool MsgWaterOffsetCommand_encode(const MsgWaterOffsetCommand_t *msg, uint8_t *d
     return true;
 }
 
+bool MsgWaterOffsetCommand_send(const MsgWaterOffsetCommand_t *msg)
+{
+    uint8_t data[MSGWATEROFFSETCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWaterOffsetCommand_t *)0) ||
+        (!(((double)msg->WaterOffset >= 0) && ((double)msg->WaterOffset <= 65535))) ||
+        (!(((double)msg->WaterOffset2 >= 0) && ((double)msg->WaterOffset2 <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWaterOffsetCommand_encode(msg, data, MSGWATEROFFSETCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWATEROFFSETCOMMAND_CAN_ID, true, data, MSGWATEROFFSETCOMMAND_CAN_DLC);
+}
+
 bool MsgAutoControlCommand_decode(const uint8_t *data, uint8_t dlc, MsgAutoControlCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgAutoControlCommand_t *)0) || (dlc < MSGAUTOCONTROLCOMMAND_CAN_DLC))
@@ -723,6 +1124,25 @@ bool MsgAutoControlCommand_encode(const MsgAutoControlCommand_t *msg, uint8_t *d
     data[0] |= (uint8_t)(((((uint64_t)msg->AutoControl) >> 0) & UINT64_C(0x1)) << 0);
 
     return true;
+}
+
+bool MsgAutoControlCommand_send(const MsgAutoControlCommand_t *msg)
+{
+    uint8_t data[MSGAUTOCONTROLCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgAutoControlCommand_t *)0) ||
+        (!(((double)msg->AutoControl >= 0) && ((double)msg->AutoControl <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgAutoControlCommand_encode(msg, data, MSGAUTOCONTROLCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGAUTOCONTROLCOMMAND_CAN_ID, true, data, MSGAUTOCONTROLCOMMAND_CAN_DLC);
 }
 
 bool MsgGripIdleCofCommand_decode(const uint8_t *data, uint8_t dlc, MsgGripIdleCofCommand_t *msg)
@@ -752,6 +1172,25 @@ bool MsgGripIdleCofCommand_encode(const MsgGripIdleCofCommand_t *msg, uint8_t *d
     data[1] |= (uint8_t)(((((uint64_t)msg->GripperIdleCof) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgGripIdleCofCommand_send(const MsgGripIdleCofCommand_t *msg)
+{
+    uint8_t data[MSGGRIPIDLECOFCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgGripIdleCofCommand_t *)0) ||
+        (!(((double)msg->GripperIdleCof >= 0) && ((double)msg->GripperIdleCof <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgGripIdleCofCommand_encode(msg, data, MSGGRIPIDLECOFCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGGRIPIDLECOFCOMMAND_CAN_ID, true, data, MSGGRIPIDLECOFCOMMAND_CAN_DLC);
 }
 
 bool MsgGripIdleOffsetCommand_decode(const uint8_t *data, uint8_t dlc, MsgGripIdleOffsetCommand_t *msg)
@@ -790,6 +1229,26 @@ bool MsgGripIdleOffsetCommand_encode(const MsgGripIdleOffsetCommand_t *msg, uint
     return true;
 }
 
+bool MsgGripIdleOffsetCommand_send(const MsgGripIdleOffsetCommand_t *msg)
+{
+    uint8_t data[MSGGRIPIDLEOFFSETCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgGripIdleOffsetCommand_t *)0) ||
+        (!(((double)msg->GripperIdleOffset >= 0) && ((double)msg->GripperIdleOffset <= 65535))) ||
+        (!(((double)msg->GripperIdleOffset2 >= 0) && ((double)msg->GripperIdleOffset2 <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgGripIdleOffsetCommand_encode(msg, data, MSGGRIPIDLEOFFSETCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGGRIPIDLEOFFSETCOMMAND_CAN_ID, true, data, MSGGRIPIDLEOFFSETCOMMAND_CAN_DLC);
+}
+
 bool MsgBeltOffsetCommand_decode(const uint8_t *data, uint8_t dlc, MsgBeltOffsetCommand_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgBeltOffsetCommand_t *)0) || (dlc < MSGBELTOFFSETCOMMAND_CAN_DLC))
@@ -819,6 +1278,25 @@ bool MsgBeltOffsetCommand_encode(const MsgBeltOffsetCommand_t *msg, uint8_t *dat
     return true;
 }
 
+bool MsgBeltOffsetCommand_send(const MsgBeltOffsetCommand_t *msg)
+{
+    uint8_t data[MSGBELTOFFSETCOMMAND_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgBeltOffsetCommand_t *)0) ||
+        (!(((double)msg->BeltOffset >= 0) && ((double)msg->BeltOffset <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgBeltOffsetCommand_encode(msg, data, MSGBELTOFFSETCOMMAND_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGBELTOFFSETCOMMAND_CAN_ID, true, data, MSGBELTOFFSETCOMMAND_CAN_DLC);
+}
+
 bool MsgConfigRequest_decode(const uint8_t *data, uint8_t dlc, MsgConfigRequest_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgConfigRequest_t *)0) || (dlc < MSGCONFIGREQUEST_CAN_DLC))
@@ -845,6 +1323,17 @@ bool MsgConfigRequest_encode(const MsgConfigRequest_t *msg, uint8_t *data, uint8
     data[0] |= (uint8_t)(((((uint64_t)msg->ConfigGroup) >> 0) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgConfigRequest_send(const MsgConfigRequest_t *msg)
+{
+    uint8_t data[MSGCONFIGREQUEST_CAN_DLC];
+
+    if (!MsgConfigRequest_encode(msg, data, MSGCONFIGREQUEST_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGCONFIGREQUEST_CAN_ID, true, data, MSGCONFIGREQUEST_CAN_DLC);
 }
 
 bool MsgSpeedConfig_decode(const uint8_t *data, uint8_t dlc, MsgSpeedConfig_t *msg)
@@ -897,6 +1386,28 @@ bool MsgSpeedConfig_encode(const MsgSpeedConfig_t *msg, uint8_t *data, uint8_t d
     return true;
 }
 
+bool MsgSpeedConfig_send(const MsgSpeedConfig_t *msg)
+{
+    uint8_t data[MSGSPEEDCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgSpeedConfig_t *)0) ||
+        (!(((double)msg->SpeedSetpointCurrent >= 0) && ((double)msg->SpeedSetpointCurrent <= 65535))) ||
+        (!(((double)msg->SpeedDefault >= 0) && ((double)msg->SpeedDefault <= 65535))) ||
+        (!(((double)msg->SpeedMin >= 0) && ((double)msg->SpeedMin <= 65535))) ||
+        (!(((double)msg->SpeedMax >= 0) && ((double)msg->SpeedMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgSpeedConfig_encode(msg, data, MSGSPEEDCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGSPEEDCONFIG_CAN_ID, true, data, MSGSPEEDCONFIG_CAN_DLC);
+}
+
 bool MsgHeightConfig_decode(const uint8_t *data, uint8_t dlc, MsgHeightConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgHeightConfig_t *)0) || (dlc < MSGHEIGHTCONFIG_CAN_DLC))
@@ -945,6 +1456,28 @@ bool MsgHeightConfig_encode(const MsgHeightConfig_t *msg, uint8_t *data, uint8_t
     data[7] |= (uint8_t)(((((uint64_t)msg->HeightMax) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgHeightConfig_send(const MsgHeightConfig_t *msg)
+{
+    uint8_t data[MSGHEIGHTCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgHeightConfig_t *)0) ||
+        (!(((double)msg->HeightSetpointCurrent >= 0) && ((double)msg->HeightSetpointCurrent <= 65535))) ||
+        (!(((double)msg->HeightDefault >= 0) && ((double)msg->HeightDefault <= 65535))) ||
+        (!(((double)msg->HeightMin >= 0) && ((double)msg->HeightMin <= 65535))) ||
+        (!(((double)msg->HeightMax >= 0) && ((double)msg->HeightMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgHeightConfig_encode(msg, data, MSGHEIGHTCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGHEIGHTCONFIG_CAN_ID, true, data, MSGHEIGHTCONFIG_CAN_DLC);
 }
 
 bool MsgPlantSpacingConfig_decode(const uint8_t *data, uint8_t dlc, MsgPlantSpacingConfig_t *msg)
@@ -997,6 +1530,28 @@ bool MsgPlantSpacingConfig_encode(const MsgPlantSpacingConfig_t *msg, uint8_t *d
     return true;
 }
 
+bool MsgPlantSpacingConfig_send(const MsgPlantSpacingConfig_t *msg)
+{
+    uint8_t data[MSGPLANTSPACINGCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgPlantSpacingConfig_t *)0) ||
+        (!(((double)msg->PlantSpacingCurrent >= 0) && ((double)msg->PlantSpacingCurrent <= 65535))) ||
+        (!(((double)msg->PlantSpacingDefault >= 0) && ((double)msg->PlantSpacingDefault <= 65535))) ||
+        (!(((double)msg->PlantSpacingMin >= 0) && ((double)msg->PlantSpacingMin <= 65535))) ||
+        (!(((double)msg->PlantSpacingMax >= 0) && ((double)msg->PlantSpacingMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgPlantSpacingConfig_encode(msg, data, MSGPLANTSPACINGCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGPLANTSPACINGCONFIG_CAN_ID, true, data, MSGPLANTSPACINGCONFIG_CAN_DLC);
+}
+
 bool MsgWaterTimeConfig_decode(const uint8_t *data, uint8_t dlc, MsgWaterTimeConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgWaterTimeConfig_t *)0) || (dlc < MSGWATERTIMECONFIG_CAN_DLC))
@@ -1045,6 +1600,28 @@ bool MsgWaterTimeConfig_encode(const MsgWaterTimeConfig_t *msg, uint8_t *data, u
     data[7] |= (uint8_t)(((((uint64_t)msg->WaterTimeMax) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgWaterTimeConfig_send(const MsgWaterTimeConfig_t *msg)
+{
+    uint8_t data[MSGWATERTIMECONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWaterTimeConfig_t *)0) ||
+        (!(((double)msg->WaterTimeCurrent >= 0) && ((double)msg->WaterTimeCurrent <= 65535))) ||
+        (!(((double)msg->WaterTimeDefault >= 0) && ((double)msg->WaterTimeDefault <= 65535))) ||
+        (!(((double)msg->WaterTimeMin >= 0) && ((double)msg->WaterTimeMin <= 65535))) ||
+        (!(((double)msg->WaterTimeMax >= 0) && ((double)msg->WaterTimeMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWaterTimeConfig_encode(msg, data, MSGWATERTIMECONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWATERTIMECONFIG_CAN_ID, true, data, MSGWATERTIMECONFIG_CAN_DLC);
 }
 
 bool MsgWheelCircumConfig_decode(const uint8_t *data, uint8_t dlc, MsgWheelCircumConfig_t *msg)
@@ -1097,6 +1674,28 @@ bool MsgWheelCircumConfig_encode(const MsgWheelCircumConfig_t *msg, uint8_t *dat
     return true;
 }
 
+bool MsgWheelCircumConfig_send(const MsgWheelCircumConfig_t *msg)
+{
+    uint8_t data[MSGWHEELCIRCUMCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWheelCircumConfig_t *)0) ||
+        (!(((double)msg->WheelCircumCurrent >= 0) && ((double)msg->WheelCircumCurrent <= 65535))) ||
+        (!(((double)msg->WheelCircumDefault >= 0) && ((double)msg->WheelCircumDefault <= 65535))) ||
+        (!(((double)msg->WheelCircumMin >= 0) && ((double)msg->WheelCircumMin <= 65535))) ||
+        (!(((double)msg->WheelCircumMax >= 0) && ((double)msg->WheelCircumMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWheelCircumConfig_encode(msg, data, MSGWHEELCIRCUMCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWHEELCIRCUMCONFIG_CAN_ID, true, data, MSGWHEELCIRCUMCONFIG_CAN_DLC);
+}
+
 bool MsgGripperIdleOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgGripperIdleOffsetConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgGripperIdleOffsetConfig_t *)0) || (dlc < MSGGRIPPERIDLEOFFSETCONFIG_CAN_DLC))
@@ -1145,6 +1744,28 @@ bool MsgGripperIdleOffsetConfig_encode(const MsgGripperIdleOffsetConfig_t *msg, 
     data[7] |= (uint8_t)(((((uint64_t)msg->GripperIdleOffsetMax) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgGripperIdleOffsetConfig_send(const MsgGripperIdleOffsetConfig_t *msg)
+{
+    uint8_t data[MSGGRIPPERIDLEOFFSETCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgGripperIdleOffsetConfig_t *)0) ||
+        (!(((double)msg->GripperIdleOffsetCurrent >= 0) && ((double)msg->GripperIdleOffsetCurrent <= 65535))) ||
+        (!(((double)msg->GripperIdleOffsetDefault >= 0) && ((double)msg->GripperIdleOffsetDefault <= 65535))) ||
+        (!(((double)msg->GripperIdleOffsetMin >= 0) && ((double)msg->GripperIdleOffsetMin <= 65535))) ||
+        (!(((double)msg->GripperIdleOffsetMax >= 0) && ((double)msg->GripperIdleOffsetMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgGripperIdleOffsetConfig_encode(msg, data, MSGGRIPPERIDLEOFFSETCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGGRIPPERIDLEOFFSETCONFIG_CAN_ID, true, data, MSGGRIPPERIDLEOFFSETCONFIG_CAN_DLC);
 }
 
 bool MsgGripperIdleCofConfig_decode(const uint8_t *data, uint8_t dlc, MsgGripperIdleCofConfig_t *msg)
@@ -1197,6 +1818,28 @@ bool MsgGripperIdleCofConfig_encode(const MsgGripperIdleCofConfig_t *msg, uint8_
     return true;
 }
 
+bool MsgGripperIdleCofConfig_send(const MsgGripperIdleCofConfig_t *msg)
+{
+    uint8_t data[MSGGRIPPERIDLECOFCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgGripperIdleCofConfig_t *)0) ||
+        (!(((double)msg->GripperIdleCofCurrent >= 0) && ((double)msg->GripperIdleCofCurrent <= 65535))) ||
+        (!(((double)msg->GripperIdleCofDefault >= 0) && ((double)msg->GripperIdleCofDefault <= 65535))) ||
+        (!(((double)msg->GripperIdleCofMin >= 0) && ((double)msg->GripperIdleCofMin <= 65535))) ||
+        (!(((double)msg->GripperIdleCofMax >= 0) && ((double)msg->GripperIdleCofMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgGripperIdleCofConfig_encode(msg, data, MSGGRIPPERIDLECOFCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGGRIPPERIDLECOFCONFIG_CAN_ID, true, data, MSGGRIPPERIDLECOFCONFIG_CAN_DLC);
+}
+
 bool MsgBeltOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgBeltOffsetConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgBeltOffsetConfig_t *)0) || (dlc < MSGBELTOFFSETCONFIG_CAN_DLC))
@@ -1245,6 +1888,28 @@ bool MsgBeltOffsetConfig_encode(const MsgBeltOffsetConfig_t *msg, uint8_t *data,
     data[7] |= (uint8_t)(((((uint64_t)msg->BeltOffsetMax) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgBeltOffsetConfig_send(const MsgBeltOffsetConfig_t *msg)
+{
+    uint8_t data[MSGBELTOFFSETCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgBeltOffsetConfig_t *)0) ||
+        (!(((double)msg->BeltOffsetCurrent >= 0) && ((double)msg->BeltOffsetCurrent <= 65535))) ||
+        (!(((double)msg->BeltOffsetDefault >= 0) && ((double)msg->BeltOffsetDefault <= 65535))) ||
+        (!(((double)msg->BeltOffsetMin >= 0) && ((double)msg->BeltOffsetMin <= 65535))) ||
+        (!(((double)msg->BeltOffsetMax >= 0) && ((double)msg->BeltOffsetMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgBeltOffsetConfig_encode(msg, data, MSGBELTOFFSETCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGBELTOFFSETCONFIG_CAN_ID, true, data, MSGBELTOFFSETCONFIG_CAN_DLC);
 }
 
 bool MsgGripperIdleOffset2Config_decode(const uint8_t *data, uint8_t dlc, MsgGripperIdleOffset2Config_t *msg)
@@ -1297,6 +1962,28 @@ bool MsgGripperIdleOffset2Config_encode(const MsgGripperIdleOffset2Config_t *msg
     return true;
 }
 
+bool MsgGripperIdleOffset2Config_send(const MsgGripperIdleOffset2Config_t *msg)
+{
+    uint8_t data[MSGGRIPPERIDLEOFFSET2CONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgGripperIdleOffset2Config_t *)0) ||
+        (!(((double)msg->GripperIdleOffset2Current >= 0) && ((double)msg->GripperIdleOffset2Current <= 65535))) ||
+        (!(((double)msg->GripperIdleOffset2Default >= 0) && ((double)msg->GripperIdleOffset2Default <= 65535))) ||
+        (!(((double)msg->GripperIdleOffset2Min >= 0) && ((double)msg->GripperIdleOffset2Min <= 65535))) ||
+        (!(((double)msg->GripperIdleOffset2Max >= 0) && ((double)msg->GripperIdleOffset2Max <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgGripperIdleOffset2Config_encode(msg, data, MSGGRIPPERIDLEOFFSET2CONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGGRIPPERIDLEOFFSET2CONFIG_CAN_ID, true, data, MSGGRIPPERIDLEOFFSET2CONFIG_CAN_DLC);
+}
+
 bool MsgHeightDetectConfig_decode(const uint8_t *data, uint8_t dlc, MsgHeightDetectConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgHeightDetectConfig_t *)0) || (dlc < MSGHEIGHTDETECTCONFIG_CAN_DLC))
@@ -1345,6 +2032,28 @@ bool MsgHeightDetectConfig_encode(const MsgHeightDetectConfig_t *msg, uint8_t *d
     data[7] |= (uint8_t)(((((uint64_t)msg->HeightDetectMax) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgHeightDetectConfig_send(const MsgHeightDetectConfig_t *msg)
+{
+    uint8_t data[MSGHEIGHTDETECTCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgHeightDetectConfig_t *)0) ||
+        (!(((double)msg->HeightDetectCurrent >= 0) && ((double)msg->HeightDetectCurrent <= 65535))) ||
+        (!(((double)msg->HeightDetectDefault >= 0) && ((double)msg->HeightDetectDefault <= 65535))) ||
+        (!(((double)msg->HeightDetectMin >= 0) && ((double)msg->HeightDetectMin <= 65535))) ||
+        (!(((double)msg->HeightDetectMax >= 0) && ((double)msg->HeightDetectMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgHeightDetectConfig_encode(msg, data, MSGHEIGHTDETECTCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGHEIGHTDETECTCONFIG_CAN_ID, true, data, MSGHEIGHTDETECTCONFIG_CAN_DLC);
 }
 
 bool MsgWaterOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgWaterOffsetConfig_t *msg)
@@ -1397,6 +2106,28 @@ bool MsgWaterOffsetConfig_encode(const MsgWaterOffsetConfig_t *msg, uint8_t *dat
     return true;
 }
 
+bool MsgWaterOffsetConfig_send(const MsgWaterOffsetConfig_t *msg)
+{
+    uint8_t data[MSGWATEROFFSETCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWaterOffsetConfig_t *)0) ||
+        (!(((double)msg->WaterOffsetCurrent >= 0) && ((double)msg->WaterOffsetCurrent <= 65535))) ||
+        (!(((double)msg->WaterOffsetDefault >= 0) && ((double)msg->WaterOffsetDefault <= 65535))) ||
+        (!(((double)msg->WaterOffsetMin >= 0) && ((double)msg->WaterOffsetMin <= 65535))) ||
+        (!(((double)msg->WaterOffsetMax >= 0) && ((double)msg->WaterOffsetMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWaterOffsetConfig_encode(msg, data, MSGWATEROFFSETCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWATEROFFSETCONFIG_CAN_ID, true, data, MSGWATEROFFSETCONFIG_CAN_DLC);
+}
+
 bool MsgWaterOffset2Config_decode(const uint8_t *data, uint8_t dlc, MsgWaterOffset2Config_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgWaterOffset2Config_t *)0) || (dlc < MSGWATEROFFSET2CONFIG_CAN_DLC))
@@ -1445,6 +2176,28 @@ bool MsgWaterOffset2Config_encode(const MsgWaterOffset2Config_t *msg, uint8_t *d
     data[7] |= (uint8_t)(((((uint64_t)msg->WaterOffset2Max) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgWaterOffset2Config_send(const MsgWaterOffset2Config_t *msg)
+{
+    uint8_t data[MSGWATEROFFSET2CONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWaterOffset2Config_t *)0) ||
+        (!(((double)msg->WaterOffset2Current >= 0) && ((double)msg->WaterOffset2Current <= 65535))) ||
+        (!(((double)msg->WaterOffset2Default >= 0) && ((double)msg->WaterOffset2Default <= 65535))) ||
+        (!(((double)msg->WaterOffset2Min >= 0) && ((double)msg->WaterOffset2Min <= 65535))) ||
+        (!(((double)msg->WaterOffset2Max >= 0) && ((double)msg->WaterOffset2Max <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWaterOffset2Config_encode(msg, data, MSGWATEROFFSET2CONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWATEROFFSET2CONFIG_CAN_ID, true, data, MSGWATEROFFSET2CONFIG_CAN_DLC);
 }
 
 bool MsgSpeedRaiseConfig_decode(const uint8_t *data, uint8_t dlc, MsgSpeedRaiseConfig_t *msg)
@@ -1497,6 +2250,28 @@ bool MsgSpeedRaiseConfig_encode(const MsgSpeedRaiseConfig_t *msg, uint8_t *data,
     return true;
 }
 
+bool MsgSpeedRaiseConfig_send(const MsgSpeedRaiseConfig_t *msg)
+{
+    uint8_t data[MSGSPEEDRAISECONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgSpeedRaiseConfig_t *)0) ||
+        (!(((double)msg->SpeedRaiseCurrent >= 0) && ((double)msg->SpeedRaiseCurrent <= 65535))) ||
+        (!(((double)msg->SpeedRaiseDefault >= 0) && ((double)msg->SpeedRaiseDefault <= 65535))) ||
+        (!(((double)msg->SpeedRaiseMin >= 0) && ((double)msg->SpeedRaiseMin <= 65535))) ||
+        (!(((double)msg->SpeedRaiseMax >= 0) && ((double)msg->SpeedRaiseMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgSpeedRaiseConfig_encode(msg, data, MSGSPEEDRAISECONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGSPEEDRAISECONFIG_CAN_ID, true, data, MSGSPEEDRAISECONFIG_CAN_DLC);
+}
+
 bool MsgSpeedLowerConfig_decode(const uint8_t *data, uint8_t dlc, MsgSpeedLowerConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgSpeedLowerConfig_t *)0) || (dlc < MSGSPEEDLOWERCONFIG_CAN_DLC))
@@ -1545,6 +2320,28 @@ bool MsgSpeedLowerConfig_encode(const MsgSpeedLowerConfig_t *msg, uint8_t *data,
     data[7] |= (uint8_t)(((((uint64_t)msg->SpeedLowerMax) >> 8) & UINT64_C(0xFF)) << 0);
 
     return true;
+}
+
+bool MsgSpeedLowerConfig_send(const MsgSpeedLowerConfig_t *msg)
+{
+    uint8_t data[MSGSPEEDLOWERCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgSpeedLowerConfig_t *)0) ||
+        (!(((double)msg->SpeedLowerCurrent >= 0) && ((double)msg->SpeedLowerCurrent <= 65535))) ||
+        (!(((double)msg->SpeedLowerDefault >= 0) && ((double)msg->SpeedLowerDefault <= 65535))) ||
+        (!(((double)msg->SpeedLowerMin >= 0) && ((double)msg->SpeedLowerMin <= 65535))) ||
+        (!(((double)msg->SpeedLowerMax >= 0) && ((double)msg->SpeedLowerMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgSpeedLowerConfig_encode(msg, data, MSGSPEEDLOWERCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGSPEEDLOWERCONFIG_CAN_ID, true, data, MSGSPEEDLOWERCONFIG_CAN_DLC);
 }
 
 bool MsgNrRowsConfig_decode(const uint8_t *data, uint8_t dlc, MsgNrRowsConfig_t *msg)
@@ -1597,6 +2394,28 @@ bool MsgNrRowsConfig_encode(const MsgNrRowsConfig_t *msg, uint8_t *data, uint8_t
     return true;
 }
 
+bool MsgNrRowsConfig_send(const MsgNrRowsConfig_t *msg)
+{
+    uint8_t data[MSGNRROWSCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgNrRowsConfig_t *)0) ||
+        (!(((double)msg->NrRowsCurrent >= 0) && ((double)msg->NrRowsCurrent <= 65535))) ||
+        (!(((double)msg->NrRowsDefault >= 0) && ((double)msg->NrRowsDefault <= 65535))) ||
+        (!(((double)msg->NrRowsMin >= 0) && ((double)msg->NrRowsMin <= 65535))) ||
+        (!(((double)msg->NrRowsMax >= 0) && ((double)msg->NrRowsMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgNrRowsConfig_encode(msg, data, MSGNRROWSCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGNRROWSCONFIG_CAN_ID, true, data, MSGNRROWSCONFIG_CAN_DLC);
+}
+
 bool MsgWheelPositionOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgWheelPositionOffsetConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgWheelPositionOffsetConfig_t *)0) || (dlc < MSGWHEELPOSITIONOFFSETCONFIG_CAN_DLC))
@@ -1647,6 +2466,28 @@ bool MsgWheelPositionOffsetConfig_encode(const MsgWheelPositionOffsetConfig_t *m
     return true;
 }
 
+bool MsgWheelPositionOffsetConfig_send(const MsgWheelPositionOffsetConfig_t *msg)
+{
+    uint8_t data[MSGWHEELPOSITIONOFFSETCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgWheelPositionOffsetConfig_t *)0) ||
+        (!(((double)msg->WheelPositionOffsetCurrent >= 0) && ((double)msg->WheelPositionOffsetCurrent <= 65535))) ||
+        (!(((double)msg->WheelPositionOffsetDefault >= 0) && ((double)msg->WheelPositionOffsetDefault <= 65535))) ||
+        (!(((double)msg->WheelPositionOffsetMin >= 0) && ((double)msg->WheelPositionOffsetMin <= 65535))) ||
+        (!(((double)msg->WheelPositionOffsetMax >= 0) && ((double)msg->WheelPositionOffsetMax <= 65535))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgWheelPositionOffsetConfig_encode(msg, data, MSGWHEELPOSITIONOFFSETCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGWHEELPOSITIONOFFSETCONFIG_CAN_ID, true, data, MSGWHEELPOSITIONOFFSETCONFIG_CAN_DLC);
+}
+
 bool MsgZAPConfig_decode(const uint8_t *data, uint8_t dlc, MsgZAPConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgZAPConfig_t *)0) || (dlc < MSGZAPCONFIG_CAN_DLC))
@@ -1681,6 +2522,26 @@ bool MsgZAPConfig_encode(const MsgZAPConfig_t *msg, uint8_t *data, uint8_t dlc)
     return true;
 }
 
+bool MsgZAPConfig_send(const MsgZAPConfig_t *msg)
+{
+    uint8_t data[MSGZAPCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgZAPConfig_t *)0) ||
+        (!(((double)msg->UseTandem >= 0) && ((double)msg->UseTandem <= 1))) ||
+        (!(((double)msg->UseWaterDosage >= 0) && ((double)msg->UseWaterDosage <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgZAPConfig_encode(msg, data, MSGZAPCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGZAPCONFIG_CAN_ID, true, data, MSGZAPCONFIG_CAN_DLC);
+}
+
 bool MsgSemiautoConfig_decode(const uint8_t *data, uint8_t dlc, MsgSemiautoConfig_t *msg)
 {
     if ((data == (const uint8_t *)0) || (msg == (MsgSemiautoConfig_t *)0) || (dlc < MSGSEMIAUTOCONFIG_CAN_DLC))
@@ -1707,4 +2568,489 @@ bool MsgSemiautoConfig_encode(const MsgSemiautoConfig_t *msg, uint8_t *data, uin
     data[0] |= (uint8_t)(((((uint64_t)msg->UseGripper) >> 0) & UINT64_C(0x1)) << 0);
 
     return true;
+}
+
+bool MsgSemiautoConfig_send(const MsgSemiautoConfig_t *msg)
+{
+    uint8_t data[MSGSEMIAUTOCONFIG_CAN_DLC];
+
+    /* Reject values outside the physical range defined in the Excel. */
+    if ((msg == (const MsgSemiautoConfig_t *)0) ||
+        (!(((double)msg->UseGripper >= 0) && ((double)msg->UseGripper <= 1))))
+    {
+        CanMessages_RejectedCount++;
+        return false;
+    }
+
+    if (!MsgSemiautoConfig_encode(msg, data, MSGSEMIAUTOCONFIG_CAN_DLC))
+    {
+        return false;
+    }
+    return CanMessages_Transmit(MSGSEMIAUTOCONFIG_CAN_ID, true, data, MSGSEMIAUTOCONFIG_CAN_DLC);
+}
+
+CanMsgs_t CanMsgs;
+uint32_t CanMessages_RejectedCount;
+
+bool CanMessages_Receive(uint32_t id, bool extended, const uint8_t *data, uint8_t dlc)
+{
+    bool ok = false;
+
+    switch (id)
+    {
+    case MSGSPEEDSTATUS_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgSpeedStatus_decode(data, dlc, &CanMsgs.SpeedStatus.Data);
+            if (ok)
+            {
+                CanMsgs.SpeedStatus.Updated = true;
+            }
+        }
+        break;
+    case MSGSPEEDSOURCESTATUS_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgSpeedSourceStatus_decode(data, dlc, &CanMsgs.SpeedSourceStatus.Data);
+            if (ok)
+            {
+                CanMsgs.SpeedSourceStatus.Updated = true;
+            }
+        }
+        break;
+    case MSGHEIGHTSTATUS_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgHeightStatus_decode(data, dlc, &CanMsgs.HeightStatus.Data);
+            if (ok)
+            {
+                CanMsgs.HeightStatus.Updated = true;
+            }
+        }
+        break;
+    case MSGCOUNTERSTATUS_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgCounterStatus_decode(data, dlc, &CanMsgs.CounterStatus.Data);
+            if (ok)
+            {
+                CanMsgs.CounterStatus.Updated = true;
+            }
+        }
+        break;
+    case MSGMACHINESTATUS_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgMachineStatus_decode(data, dlc, &CanMsgs.MachineStatus.Data);
+            if (ok)
+            {
+                CanMsgs.MachineStatus.Updated = true;
+            }
+        }
+        break;
+    case MSGRAISELOWERSTATUS_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgRaiseLowerStatus_decode(data, dlc, &CanMsgs.RaiseLowerStatus.Data);
+            if (ok)
+            {
+                CanMsgs.RaiseLowerStatus.Updated = true;
+            }
+        }
+        break;
+    case MSGEDGEDETECTIONSTATUS_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgEdgeDetectionStatus_decode(data, dlc, &CanMsgs.EdgeDetectionStatus.Data);
+            if (ok)
+            {
+                CanMsgs.EdgeDetectionStatus.Updated = true;
+            }
+        }
+        break;
+    case MSGAUTOCONTROLACTIVE_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgAutoControlActive_decode(data, dlc, &CanMsgs.AutoControlActive.Data);
+            if (ok)
+            {
+                CanMsgs.AutoControlActive.Updated = true;
+            }
+        }
+        break;
+    case MSGPLANTWHEELSPEED_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgPlantWheelSpeed_decode(data, dlc, &CanMsgs.PlantWheelSpeed.Data);
+            if (ok)
+            {
+                CanMsgs.PlantWheelSpeed.Updated = true;
+            }
+        }
+        break;
+    case MSGSPEEDSETPOINTCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgSpeedSetpointCommand_decode(data, dlc, &CanMsgs.SpeedSetpointCommand.Data);
+            if (ok)
+            {
+                CanMsgs.SpeedSetpointCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGPLANTSPACINGCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgPlantSpacingCommand_decode(data, dlc, &CanMsgs.PlantSpacingCommand.Data);
+            if (ok)
+            {
+                CanMsgs.PlantSpacingCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGHEIGHTSETPOINTCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgHeightSetpointCommand_decode(data, dlc, &CanMsgs.HeightSetpointCommand.Data);
+            if (ok)
+            {
+                CanMsgs.HeightSetpointCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGHEIGHTDETECTCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgHeightDetectCommand_decode(data, dlc, &CanMsgs.HeightDetectCommand.Data);
+            if (ok)
+            {
+                CanMsgs.HeightDetectCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGWHEELCIRCUMCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWheelCircumCommand_decode(data, dlc, &CanMsgs.WheelCircumCommand.Data);
+            if (ok)
+            {
+                CanMsgs.WheelCircumCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGHEIGHTCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgHeightCommand_decode(data, dlc, &CanMsgs.HeightCommand.Data);
+            if (ok)
+            {
+                CanMsgs.HeightCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGLIFTSPEEDCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgLiftSpeedCommand_decode(data, dlc, &CanMsgs.LiftSpeedCommand.Data);
+            if (ok)
+            {
+                CanMsgs.LiftSpeedCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGCONFIGCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgConfigCommand_decode(data, dlc, &CanMsgs.ConfigCommand.Data);
+            if (ok)
+            {
+                CanMsgs.ConfigCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGNRROWSCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgNrRowsCommand_decode(data, dlc, &CanMsgs.NrRowsCommand.Data);
+            if (ok)
+            {
+                CanMsgs.NrRowsCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGWORKWIDTHCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWorkWidthCommand_decode(data, dlc, &CanMsgs.WorkWidthCommand.Data);
+            if (ok)
+            {
+                CanMsgs.WorkWidthCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGHEIGHTTHRESHOLDCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgHeightThresholdCommand_decode(data, dlc, &CanMsgs.HeightThresholdCommand.Data);
+            if (ok)
+            {
+                CanMsgs.HeightThresholdCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGWATERTIMECOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWaterTimeCommand_decode(data, dlc, &CanMsgs.WaterTimeCommand.Data);
+            if (ok)
+            {
+                CanMsgs.WaterTimeCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGWATEROFFSETCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWaterOffsetCommand_decode(data, dlc, &CanMsgs.WaterOffsetCommand.Data);
+            if (ok)
+            {
+                CanMsgs.WaterOffsetCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGAUTOCONTROLCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgAutoControlCommand_decode(data, dlc, &CanMsgs.AutoControlCommand.Data);
+            if (ok)
+            {
+                CanMsgs.AutoControlCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGGRIPIDLECOFCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgGripIdleCofCommand_decode(data, dlc, &CanMsgs.GripIdleCofCommand.Data);
+            if (ok)
+            {
+                CanMsgs.GripIdleCofCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGGRIPIDLEOFFSETCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgGripIdleOffsetCommand_decode(data, dlc, &CanMsgs.GripIdleOffsetCommand.Data);
+            if (ok)
+            {
+                CanMsgs.GripIdleOffsetCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGBELTOFFSETCOMMAND_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgBeltOffsetCommand_decode(data, dlc, &CanMsgs.BeltOffsetCommand.Data);
+            if (ok)
+            {
+                CanMsgs.BeltOffsetCommand.Updated = true;
+            }
+        }
+        break;
+    case MSGCONFIGREQUEST_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgConfigRequest_decode(data, dlc, &CanMsgs.ConfigRequest.Data);
+            if (ok)
+            {
+                CanMsgs.ConfigRequest.Updated = true;
+            }
+        }
+        break;
+    case MSGSPEEDCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgSpeedConfig_decode(data, dlc, &CanMsgs.SpeedConfig.Data);
+            if (ok)
+            {
+                CanMsgs.SpeedConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGHEIGHTCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgHeightConfig_decode(data, dlc, &CanMsgs.HeightConfig.Data);
+            if (ok)
+            {
+                CanMsgs.HeightConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGPLANTSPACINGCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgPlantSpacingConfig_decode(data, dlc, &CanMsgs.PlantSpacingConfig.Data);
+            if (ok)
+            {
+                CanMsgs.PlantSpacingConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGWATERTIMECONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWaterTimeConfig_decode(data, dlc, &CanMsgs.WaterTimeConfig.Data);
+            if (ok)
+            {
+                CanMsgs.WaterTimeConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGWHEELCIRCUMCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWheelCircumConfig_decode(data, dlc, &CanMsgs.WheelCircumConfig.Data);
+            if (ok)
+            {
+                CanMsgs.WheelCircumConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGGRIPPERIDLEOFFSETCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgGripperIdleOffsetConfig_decode(data, dlc, &CanMsgs.GripperIdleOffsetConfig.Data);
+            if (ok)
+            {
+                CanMsgs.GripperIdleOffsetConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGGRIPPERIDLECOFCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgGripperIdleCofConfig_decode(data, dlc, &CanMsgs.GripperIdleCofConfig.Data);
+            if (ok)
+            {
+                CanMsgs.GripperIdleCofConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGBELTOFFSETCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgBeltOffsetConfig_decode(data, dlc, &CanMsgs.BeltOffsetConfig.Data);
+            if (ok)
+            {
+                CanMsgs.BeltOffsetConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGGRIPPERIDLEOFFSET2CONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgGripperIdleOffset2Config_decode(data, dlc, &CanMsgs.GripperIdleOffset2Config.Data);
+            if (ok)
+            {
+                CanMsgs.GripperIdleOffset2Config.Updated = true;
+            }
+        }
+        break;
+    case MSGHEIGHTDETECTCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgHeightDetectConfig_decode(data, dlc, &CanMsgs.HeightDetectConfig.Data);
+            if (ok)
+            {
+                CanMsgs.HeightDetectConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGWATEROFFSETCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWaterOffsetConfig_decode(data, dlc, &CanMsgs.WaterOffsetConfig.Data);
+            if (ok)
+            {
+                CanMsgs.WaterOffsetConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGWATEROFFSET2CONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWaterOffset2Config_decode(data, dlc, &CanMsgs.WaterOffset2Config.Data);
+            if (ok)
+            {
+                CanMsgs.WaterOffset2Config.Updated = true;
+            }
+        }
+        break;
+    case MSGSPEEDRAISECONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgSpeedRaiseConfig_decode(data, dlc, &CanMsgs.SpeedRaiseConfig.Data);
+            if (ok)
+            {
+                CanMsgs.SpeedRaiseConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGSPEEDLOWERCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgSpeedLowerConfig_decode(data, dlc, &CanMsgs.SpeedLowerConfig.Data);
+            if (ok)
+            {
+                CanMsgs.SpeedLowerConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGNRROWSCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgNrRowsConfig_decode(data, dlc, &CanMsgs.NrRowsConfig.Data);
+            if (ok)
+            {
+                CanMsgs.NrRowsConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGWHEELPOSITIONOFFSETCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgWheelPositionOffsetConfig_decode(data, dlc, &CanMsgs.WheelPositionOffsetConfig.Data);
+            if (ok)
+            {
+                CanMsgs.WheelPositionOffsetConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGZAPCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgZAPConfig_decode(data, dlc, &CanMsgs.ZAPConfig.Data);
+            if (ok)
+            {
+                CanMsgs.ZAPConfig.Updated = true;
+            }
+        }
+        break;
+    case MSGSEMIAUTOCONFIG_CAN_ID:
+        if (extended == true)
+        {
+            ok = MsgSemiautoConfig_decode(data, dlc, &CanMsgs.SemiautoConfig.Data);
+            if (ok)
+            {
+                CanMsgs.SemiautoConfig.Updated = true;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+
+    return ok;
 }

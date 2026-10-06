@@ -31,9 +31,13 @@ struct EditableValue
   const char *Unit;
   float *Value;
   int Decimals;
+  // Alleen voor waarden die de controller bewaart en toetst; overige velden blijven nul.
+  const ParamLimits *Limits;
+  bool (*Send)(uint16_t RawValue);
+  float RawPerUnit;
 };
 
-EditableValue PlantSpacingSetting = {"Plant spacing", "cm", &PlantSpacingCm, 1};
+EditableValue PlantSpacingSetting = {"Plant spacing", "cm", &PlantSpacingCm, 1, &CanRx.PlantSpacingMm, canSendPlantSpacing, 10.0f};
 EditableValue NumberOfGrippersSetting = {"# Grippers", "", &NumberOfGrippers, 0};
 EditableValue NumberRowsSetting = {"Rows", "", &NumberRows, 0};
 EditableValue RowDistanceSetting = {"row distance", "cm", &RowDistanceCm, 1};
@@ -73,6 +77,34 @@ void drawInputReturnScreen()
     drawAdvancedScreen();
   else
     drawMenu();
+}
+
+// Toetst de invoer aan het bereik van de controller en verstuurt hem. Bij een fout blijft
+// het invoerscherm staan met een melding; de controller toetst zelf nogmaals.
+bool saveControllerValue(const EditableValue &Setting, float NewValue)
+{
+  const ParamLimits &Limits = *Setting.Limits;
+  if (!Limits.Valid)
+  {
+    drawInputError("No controller data");
+    return false;
+  }
+
+  uint16_t RawValue = (uint16_t)lroundf(NewValue * Setting.RawPerUnit);
+  if (RawValue < Limits.Min || RawValue > Limits.Max)
+  {
+    String Range = String(Limits.Min / Setting.RawPerUnit, Setting.Decimals) + " - " +
+                   String(Limits.Max / Setting.RawPerUnit, Setting.Decimals) + " " + Setting.Unit;
+    drawInputError(Range);
+    return false;
+  }
+
+  if (!Setting.Send(RawValue))
+  {
+    drawInputError("Send failed");
+    return false;
+  }
+  return true;
 }
 
 void handleNumericInputTouch(uint16_t TouchX, uint16_t TouchY)
@@ -136,9 +168,42 @@ void handleNumericInputTouch(uint16_t TouchX, uint16_t TouchY)
   }
   else if (TouchInButton(TouchX, TouchY, SaveX, Row4Y, HalfW, ButtonH))
   {
-    *ActiveSetting->Value = InputString.length() ? InputString.toFloat() : 0.0f;
+    float NewValue = InputString.length() ? InputString.toFloat() : 0.0f;
+
+    if (ActiveSetting->Limits == nullptr)
+    {
+      *ActiveSetting->Value = NewValue;
+    }
+    else if (!saveControllerValue(*ActiveSetting, NewValue))
+    {
+      return;
+    }
+
     CurrentScreen = InputReturnScreen;
     drawInputReturnScreen();
+  }
+}
+
+void handleUi();
+
+void UiTask(void *Parameters)
+{
+  for (;;)
+  {
+    handleUi();
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+}
+
+// Core 1: CAN ontvangen, los van de aanraak-delay in de UI-taak.
+void CanTask(void *Parameters)
+{
+  for (;;)
+  {
+    canReceive();
+    canRequestMissingConfig();
+    canUpdateStatus();
+    vTaskDelay(pdMS_TO_TICKS(1));
   }
 }
 
@@ -151,22 +216,32 @@ void setup()
   drawHome();
   refreshHomeScreen(true);
   canInit();
+
+  xTaskCreatePinnedToCore(UiTask, "UiTask", 10000, NULL, 2, NULL, 0);
+  xTaskCreatePinnedToCore(CanTask, "CanTask", 10000, NULL, 1, NULL, 1);
 }
 
+// Alle werk gebeurt in de taken hierboven.
 void loop()
 {
-  // Vóór de touch-afhandeling, zodat de RX-queue ook zonder aanraking leegloopt.
-  bool CanUpdated = canReceive();
-  if (CanUpdated)
-    CurrentSpeedKmh = CanRx.SpeedKmh;
+  vTaskDelete(NULL);
+}
 
-  if (CurrentScreen == Screen::Home && CanUpdated)
+// Core 0: scherm en aanraking. Alle TFT-aanroepen blijven in deze taak.
+void handleUi()
+{
+  CurrentSpeedKmh = CanRx.SpeedKmh;
+
+  // Niet tijdens invoer overschrijven; de controller is de bron van de ingestelde waarde.
+  if (CanRx.PlantSpacingMm.Valid && CurrentScreen != Screen::NumericInput)
+    PlantSpacingCm = CanRx.PlantSpacingMm.Current / PlantSpacingSetting.RawPerUnit;
+
+  if (CurrentScreen == Screen::Home)
   {
     refreshHomeScreen(false);
   }
   else if (CurrentScreen == Screen::Debug)
   {
-    canUpdateStatus();
     updateDebugPlantWheelRpm(CanRx.PlantWheelRpm, false);
     updateDebugCan(CanRx, false);
   }

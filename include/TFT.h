@@ -20,6 +20,7 @@ void updateHomeValue(int Id, int X, int Y, float NewValue, const GFXfont *Font, 
 void updateHectareCounter(float Hectares, bool Force);
 void drawEnable(bool Enabled, bool Force);
 void drawInputScreen(const char *ItemName, const char *Unit, const String &Text);
+void drawInputError(const String &Message);
 void drawInputHeader(const char *ItemName, const char *Unit, const String &Text);
 
 #endif

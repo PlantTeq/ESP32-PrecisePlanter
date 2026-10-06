@@ -304,6 +304,18 @@ void drawInputHeader(const char *ItemName, const char *Unit, const String &Text)
   tft.setTextDatum(TL_DATUM);
 }
 
+// replaces the header with a message, the next key press redraws the normal header
+void drawInputError(const String &Message)
+{
+  tft.fillRect(10, 10, 300, 40, TFT_BLACK);
+  tft.drawRect(10, 10, 300, 40, TFT_RED);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_RED);
+  tft.setFreeFont(FF18);
+  tft.drawString(Message, 160, 30);
+  tft.setTextDatum(TL_DATUM);
+}
+
 // numeric keypad (1-9, ., 0, backspace) plus return/save buttons, same grid as Rijenstrooier's tftUI_drawKeyboard
 static void drawNumericKeypad()
 {

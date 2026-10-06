@@ -1,8 +1,8 @@
 /*
  * AUTO-GENERATED FILE - DO NOT EDIT.
-#define CAN_PROTOCOL_VERSION "V1.06"
+#define CAN_PROTOCOL_VERSION "V1.12"
 #define CAN_PROTOCOL_DATE    "2026-10-05"
-#define CAN_PROTOCOL_TIME    "13:53:50"
+#define CAN_PROTOCOL_TIME    "16:53:55"
  * Generated from the Excel CAN protocol definition.
  */
 
@@ -160,12 +160,13 @@ typedef uint8_t ConfigGroup_value_t;
 
 typedef struct MsgSpeedStatus_t
 {
-    /* Actuele snelheid */
+    /* Actuele snelheid [mm/s] */
     int32_t SpeedActual;
 } MsgSpeedStatus_t;
 
 bool MsgSpeedStatus_decode(const uint8_t *data, uint8_t dlc, MsgSpeedStatus_t *msg);
 bool MsgSpeedStatus_encode(const MsgSpeedStatus_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgSpeedStatus_send(const MsgSpeedStatus_t *msg);
 
 typedef struct MsgSpeedSourceStatus_t
 {
@@ -175,19 +176,21 @@ typedef struct MsgSpeedSourceStatus_t
 
 bool MsgSpeedSourceStatus_decode(const uint8_t *data, uint8_t dlc, MsgSpeedSourceStatus_t *msg);
 bool MsgSpeedSourceStatus_encode(const MsgSpeedSourceStatus_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgSpeedSourceStatus_send(const MsgSpeedSourceStatus_t *msg);
 
 typedef struct MsgHeightStatus_t
 {
-    /* Actuele hoogte (gebruikt door controller) */
+    /* Actuele hoogte (gebruikt door controller) [mm] */
     uint16_t HeightActual;
-    /* Actuele hoogte sensor 1 */
+    /* Actuele hoogte sensor 1 [mm] */
     uint16_t HeightActualSensor1;
-    /* Actuele hoogte sensor 2 */
+    /* Actuele hoogte sensor 2 [mm] */
     uint16_t HeightActualSensor2;
 } MsgHeightStatus_t;
 
 bool MsgHeightStatus_decode(const uint8_t *data, uint8_t dlc, MsgHeightStatus_t *msg);
 bool MsgHeightStatus_encode(const MsgHeightStatus_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgHeightStatus_send(const MsgHeightStatus_t *msg);
 
 typedef struct MsgCounterStatus_t
 {
@@ -199,6 +202,7 @@ typedef struct MsgCounterStatus_t
 
 bool MsgCounterStatus_decode(const uint8_t *data, uint8_t dlc, MsgCounterStatus_t *msg);
 bool MsgCounterStatus_encode(const MsgCounterStatus_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgCounterStatus_send(const MsgCounterStatus_t *msg);
 
 typedef struct MsgMachineStatus_t
 {
@@ -208,6 +212,7 @@ typedef struct MsgMachineStatus_t
 
 bool MsgMachineStatus_decode(const uint8_t *data, uint8_t dlc, MsgMachineStatus_t *msg);
 bool MsgMachineStatus_encode(const MsgMachineStatus_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgMachineStatus_send(const MsgMachineStatus_t *msg);
 
 typedef struct MsgRaiseLowerStatus_t
 {
@@ -219,6 +224,7 @@ typedef struct MsgRaiseLowerStatus_t
 
 bool MsgRaiseLowerStatus_decode(const uint8_t *data, uint8_t dlc, MsgRaiseLowerStatus_t *msg);
 bool MsgRaiseLowerStatus_encode(const MsgRaiseLowerStatus_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgRaiseLowerStatus_send(const MsgRaiseLowerStatus_t *msg);
 
 typedef struct MsgEdgeDetectionStatus_t
 {
@@ -230,6 +236,7 @@ typedef struct MsgEdgeDetectionStatus_t
 
 bool MsgEdgeDetectionStatus_decode(const uint8_t *data, uint8_t dlc, MsgEdgeDetectionStatus_t *msg);
 bool MsgEdgeDetectionStatus_encode(const MsgEdgeDetectionStatus_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgEdgeDetectionStatus_send(const MsgEdgeDetectionStatus_t *msg);
 
 typedef struct MsgAutoControlActive_t
 {
@@ -239,42 +246,47 @@ typedef struct MsgAutoControlActive_t
 
 bool MsgAutoControlActive_decode(const uint8_t *data, uint8_t dlc, MsgAutoControlActive_t *msg);
 bool MsgAutoControlActive_encode(const MsgAutoControlActive_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgAutoControlActive_send(const MsgAutoControlActive_t *msg);
 
 typedef struct MsgPlantWheelSpeed_t
 {
-    /* Plantwielsnelheid */
+    /* Plantwielsnelheid [RPM] */
     float PlantwheelSpeed;
 } MsgPlantWheelSpeed_t;
 
 bool MsgPlantWheelSpeed_decode(const uint8_t *data, uint8_t dlc, MsgPlantWheelSpeed_t *msg);
 bool MsgPlantWheelSpeed_encode(const MsgPlantWheelSpeed_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgPlantWheelSpeed_send(const MsgPlantWheelSpeed_t *msg);
 
 typedef struct MsgSpeedSetpointCommand_t
 {
-    /* Handmatig snelheid setpoint */
+    /* Handmatig snelheid setpoint [mm/s] */
     int32_t SpeedSetpoint;
 } MsgSpeedSetpointCommand_t;
 
 bool MsgSpeedSetpointCommand_decode(const uint8_t *data, uint8_t dlc, MsgSpeedSetpointCommand_t *msg);
 bool MsgSpeedSetpointCommand_encode(const MsgSpeedSetpointCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgSpeedSetpointCommand_send(const MsgSpeedSetpointCommand_t *msg);
 
 typedef struct MsgPlantSpacingCommand_t
 {
-    /* setpoint plantafstand */
+    /* setpoint plantafstand [mm] */
     uint16_t PlantSpacingSetpoint;
 } MsgPlantSpacingCommand_t;
 
 bool MsgPlantSpacingCommand_decode(const uint8_t *data, uint8_t dlc, MsgPlantSpacingCommand_t *msg);
 bool MsgPlantSpacingCommand_encode(const MsgPlantSpacingCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgPlantSpacingCommand_send(const MsgPlantSpacingCommand_t *msg);
 
 typedef struct MsgHeightSetpointCommand_t
 {
-    /* setpoint hoogte */
+    /* setpoint hoogte [mm] */
     uint16_t HeightSetpoint;
 } MsgHeightSetpointCommand_t;
 
 bool MsgHeightSetpointCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightSetpointCommand_t *msg);
 bool MsgHeightSetpointCommand_encode(const MsgHeightSetpointCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgHeightSetpointCommand_send(const MsgHeightSetpointCommand_t *msg);
 
 typedef struct MsgHeightDetectCommand_t
 {
@@ -284,15 +296,17 @@ typedef struct MsgHeightDetectCommand_t
 
 bool MsgHeightDetectCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightDetectCommand_t *msg);
 bool MsgHeightDetectCommand_encode(const MsgHeightDetectCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgHeightDetectCommand_send(const MsgHeightDetectCommand_t *msg);
 
 typedef struct MsgWheelCircumCommand_t
 {
-    /* Instelling wielomtrek */
+    /* Instelling wielomtrek [mm] */
     uint16_t WheelCircum;
 } MsgWheelCircumCommand_t;
 
 bool MsgWheelCircumCommand_decode(const uint8_t *data, uint8_t dlc, MsgWheelCircumCommand_t *msg);
 bool MsgWheelCircumCommand_encode(const MsgWheelCircumCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWheelCircumCommand_send(const MsgWheelCircumCommand_t *msg);
 
 typedef struct MsgHeightCommand_t
 {
@@ -304,6 +318,7 @@ typedef struct MsgHeightCommand_t
 
 bool MsgHeightCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightCommand_t *msg);
 bool MsgHeightCommand_encode(const MsgHeightCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgHeightCommand_send(const MsgHeightCommand_t *msg);
 
 typedef struct MsgLiftSpeedCommand_t
 {
@@ -315,6 +330,7 @@ typedef struct MsgLiftSpeedCommand_t
 
 bool MsgLiftSpeedCommand_decode(const uint8_t *data, uint8_t dlc, MsgLiftSpeedCommand_t *msg);
 bool MsgLiftSpeedCommand_encode(const MsgLiftSpeedCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgLiftSpeedCommand_send(const MsgLiftSpeedCommand_t *msg);
 
 typedef struct MsgConfigCommand_t
 {
@@ -324,6 +340,7 @@ typedef struct MsgConfigCommand_t
 
 bool MsgConfigCommand_decode(const uint8_t *data, uint8_t dlc, MsgConfigCommand_t *msg);
 bool MsgConfigCommand_encode(const MsgConfigCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgConfigCommand_send(const MsgConfigCommand_t *msg);
 
 typedef struct MsgNrRowsCommand_t
 {
@@ -333,44 +350,49 @@ typedef struct MsgNrRowsCommand_t
 
 bool MsgNrRowsCommand_decode(const uint8_t *data, uint8_t dlc, MsgNrRowsCommand_t *msg);
 bool MsgNrRowsCommand_encode(const MsgNrRowsCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgNrRowsCommand_send(const MsgNrRowsCommand_t *msg);
 
 typedef struct MsgWorkWidthCommand_t
 {
-    /* Instelling werkbreedte */
+    /* Instelling werkbreedte [mm] */
     uint16_t WorkWidth;
 } MsgWorkWidthCommand_t;
 
 bool MsgWorkWidthCommand_decode(const uint8_t *data, uint8_t dlc, MsgWorkWidthCommand_t *msg);
 bool MsgWorkWidthCommand_encode(const MsgWorkWidthCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWorkWidthCommand_send(const MsgWorkWidthCommand_t *msg);
 
 typedef struct MsgHeightThresholdCommand_t
 {
-    /* Grenswaarde einde rij detectie */
+    /* Grenswaarde einde rij detectie [mm] */
     uint16_t HeightDetectThreshold;
 } MsgHeightThresholdCommand_t;
 
 bool MsgHeightThresholdCommand_decode(const uint8_t *data, uint8_t dlc, MsgHeightThresholdCommand_t *msg);
 bool MsgHeightThresholdCommand_encode(const MsgHeightThresholdCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgHeightThresholdCommand_send(const MsgHeightThresholdCommand_t *msg);
 
 typedef struct MsgWaterTimeCommand_t
 {
-    /* Watergift tijd */
+    /* Watergift tijd [ms] */
     uint16_t WaterTime;
 } MsgWaterTimeCommand_t;
 
 bool MsgWaterTimeCommand_decode(const uint8_t *data, uint8_t dlc, MsgWaterTimeCommand_t *msg);
 bool MsgWaterTimeCommand_encode(const MsgWaterTimeCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWaterTimeCommand_send(const MsgWaterTimeCommand_t *msg);
 
 typedef struct MsgWaterOffsetCommand_t
 {
-    /* Timing water gift */
+    /* Timing water gift [ms] */
     uint16_t WaterOffset;
-    /* Timing water gift unit 2 */
+    /* Timing water gift unit 2 [ms] */
     uint16_t WaterOffset2;
 } MsgWaterOffsetCommand_t;
 
 bool MsgWaterOffsetCommand_decode(const uint8_t *data, uint8_t dlc, MsgWaterOffsetCommand_t *msg);
 bool MsgWaterOffsetCommand_encode(const MsgWaterOffsetCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWaterOffsetCommand_send(const MsgWaterOffsetCommand_t *msg);
 
 typedef struct MsgAutoControlCommand_t
 {
@@ -380,35 +402,39 @@ typedef struct MsgAutoControlCommand_t
 
 bool MsgAutoControlCommand_decode(const uint8_t *data, uint8_t dlc, MsgAutoControlCommand_t *msg);
 bool MsgAutoControlCommand_encode(const MsgAutoControlCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgAutoControlCommand_send(const MsgAutoControlCommand_t *msg);
 
 typedef struct MsgGripIdleCofCommand_t
 {
-    /* check */
+    /* check [deg] */
     uint16_t GripperIdleCof;
 } MsgGripIdleCofCommand_t;
 
 bool MsgGripIdleCofCommand_decode(const uint8_t *data, uint8_t dlc, MsgGripIdleCofCommand_t *msg);
 bool MsgGripIdleCofCommand_encode(const MsgGripIdleCofCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgGripIdleCofCommand_send(const MsgGripIdleCofCommand_t *msg);
 
 typedef struct MsgGripIdleOffsetCommand_t
 {
-    /* Gripper timing */
+    /* Gripper timing [deg] */
     uint16_t GripperIdleOffset;
-    /* Gripper 2 timing */
+    /* Gripper 2 timing [deg] */
     uint16_t GripperIdleOffset2;
 } MsgGripIdleOffsetCommand_t;
 
 bool MsgGripIdleOffsetCommand_decode(const uint8_t *data, uint8_t dlc, MsgGripIdleOffsetCommand_t *msg);
 bool MsgGripIdleOffsetCommand_encode(const MsgGripIdleOffsetCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgGripIdleOffsetCommand_send(const MsgGripIdleOffsetCommand_t *msg);
 
 typedef struct MsgBeltOffsetCommand_t
 {
-    /* Belt ZAP timing */
+    /* Belt ZAP timing [ms] */
     uint16_t BeltOffset;
 } MsgBeltOffsetCommand_t;
 
 bool MsgBeltOffsetCommand_decode(const uint8_t *data, uint8_t dlc, MsgBeltOffsetCommand_t *msg);
 bool MsgBeltOffsetCommand_encode(const MsgBeltOffsetCommand_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgBeltOffsetCommand_send(const MsgBeltOffsetCommand_t *msg);
 
 typedef struct MsgConfigRequest_t
 {
@@ -418,138 +444,199 @@ typedef struct MsgConfigRequest_t
 
 bool MsgConfigRequest_decode(const uint8_t *data, uint8_t dlc, MsgConfigRequest_t *msg);
 bool MsgConfigRequest_encode(const MsgConfigRequest_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgConfigRequest_send(const MsgConfigRequest_t *msg);
 
 typedef struct MsgSpeedConfig_t
 {
+    /* [mm/s] */
     uint16_t SpeedSetpointCurrent;
+    /* [mm/s] */
     uint16_t SpeedDefault;
+    /* [mm/s] */
     uint16_t SpeedMin;
+    /* [mm/s] */
     uint16_t SpeedMax;
 } MsgSpeedConfig_t;
 
 bool MsgSpeedConfig_decode(const uint8_t *data, uint8_t dlc, MsgSpeedConfig_t *msg);
 bool MsgSpeedConfig_encode(const MsgSpeedConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgSpeedConfig_send(const MsgSpeedConfig_t *msg);
 
 typedef struct MsgHeightConfig_t
 {
+    /* [mm] */
     uint16_t HeightSetpointCurrent;
+    /* [mm] */
     uint16_t HeightDefault;
+    /* [mm] */
     uint16_t HeightMin;
+    /* [mm] */
     uint16_t HeightMax;
 } MsgHeightConfig_t;
 
 bool MsgHeightConfig_decode(const uint8_t *data, uint8_t dlc, MsgHeightConfig_t *msg);
 bool MsgHeightConfig_encode(const MsgHeightConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgHeightConfig_send(const MsgHeightConfig_t *msg);
 
 typedef struct MsgPlantSpacingConfig_t
 {
+    /* [mm] */
     uint16_t PlantSpacingCurrent;
+    /* [mm] */
     uint16_t PlantSpacingDefault;
+    /* [mm] */
     uint16_t PlantSpacingMin;
+    /* [mm] */
     uint16_t PlantSpacingMax;
 } MsgPlantSpacingConfig_t;
 
 bool MsgPlantSpacingConfig_decode(const uint8_t *data, uint8_t dlc, MsgPlantSpacingConfig_t *msg);
 bool MsgPlantSpacingConfig_encode(const MsgPlantSpacingConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgPlantSpacingConfig_send(const MsgPlantSpacingConfig_t *msg);
 
 typedef struct MsgWaterTimeConfig_t
 {
+    /* [ms] */
     uint16_t WaterTimeCurrent;
+    /* [ms] */
     uint16_t WaterTimeDefault;
+    /* [ms] */
     uint16_t WaterTimeMin;
+    /* [ms] */
     uint16_t WaterTimeMax;
 } MsgWaterTimeConfig_t;
 
 bool MsgWaterTimeConfig_decode(const uint8_t *data, uint8_t dlc, MsgWaterTimeConfig_t *msg);
 bool MsgWaterTimeConfig_encode(const MsgWaterTimeConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWaterTimeConfig_send(const MsgWaterTimeConfig_t *msg);
 
 typedef struct MsgWheelCircumConfig_t
 {
+    /* [mm] */
     uint16_t WheelCircumCurrent;
+    /* [mm] */
     uint16_t WheelCircumDefault;
+    /* [mm] */
     uint16_t WheelCircumMin;
+    /* [mm] */
     uint16_t WheelCircumMax;
 } MsgWheelCircumConfig_t;
 
 bool MsgWheelCircumConfig_decode(const uint8_t *data, uint8_t dlc, MsgWheelCircumConfig_t *msg);
 bool MsgWheelCircumConfig_encode(const MsgWheelCircumConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWheelCircumConfig_send(const MsgWheelCircumConfig_t *msg);
 
 typedef struct MsgGripperIdleOffsetConfig_t
 {
+    /* [deg] */
     uint16_t GripperIdleOffsetCurrent;
+    /* [deg] */
     uint16_t GripperIdleOffsetDefault;
+    /* [deg] */
     uint16_t GripperIdleOffsetMin;
+    /* [deg] */
     uint16_t GripperIdleOffsetMax;
 } MsgGripperIdleOffsetConfig_t;
 
 bool MsgGripperIdleOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgGripperIdleOffsetConfig_t *msg);
 bool MsgGripperIdleOffsetConfig_encode(const MsgGripperIdleOffsetConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgGripperIdleOffsetConfig_send(const MsgGripperIdleOffsetConfig_t *msg);
 
 typedef struct MsgGripperIdleCofConfig_t
 {
+    /* [deg] */
     uint16_t GripperIdleCofCurrent;
+    /* [deg] */
     uint16_t GripperIdleCofDefault;
+    /* [deg] */
     uint16_t GripperIdleCofMin;
+    /* [deg] */
     uint16_t GripperIdleCofMax;
 } MsgGripperIdleCofConfig_t;
 
 bool MsgGripperIdleCofConfig_decode(const uint8_t *data, uint8_t dlc, MsgGripperIdleCofConfig_t *msg);
 bool MsgGripperIdleCofConfig_encode(const MsgGripperIdleCofConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgGripperIdleCofConfig_send(const MsgGripperIdleCofConfig_t *msg);
 
 typedef struct MsgBeltOffsetConfig_t
 {
+    /* [ms] */
     uint16_t BeltOffsetCurrent;
+    /* [ms] */
     uint16_t BeltOffsetDefault;
+    /* [ms] */
     uint16_t BeltOffsetMin;
+    /* [ms] */
     uint16_t BeltOffsetMax;
 } MsgBeltOffsetConfig_t;
 
 bool MsgBeltOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgBeltOffsetConfig_t *msg);
 bool MsgBeltOffsetConfig_encode(const MsgBeltOffsetConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgBeltOffsetConfig_send(const MsgBeltOffsetConfig_t *msg);
 
 typedef struct MsgGripperIdleOffset2Config_t
 {
+    /* [deg] */
     uint16_t GripperIdleOffset2Current;
+    /* [deg] */
     uint16_t GripperIdleOffset2Default;
+    /* [deg] */
     uint16_t GripperIdleOffset2Min;
+    /* [deg] */
     uint16_t GripperIdleOffset2Max;
 } MsgGripperIdleOffset2Config_t;
 
 bool MsgGripperIdleOffset2Config_decode(const uint8_t *data, uint8_t dlc, MsgGripperIdleOffset2Config_t *msg);
 bool MsgGripperIdleOffset2Config_encode(const MsgGripperIdleOffset2Config_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgGripperIdleOffset2Config_send(const MsgGripperIdleOffset2Config_t *msg);
 
 typedef struct MsgHeightDetectConfig_t
 {
+    /* [mm] */
     uint16_t HeightDetectCurrent;
+    /* [mm] */
     uint16_t HeightDetectDefault;
+    /* [mm] */
     uint16_t HeightDetectMin;
+    /* [mm] */
     uint16_t HeightDetectMax;
 } MsgHeightDetectConfig_t;
 
 bool MsgHeightDetectConfig_decode(const uint8_t *data, uint8_t dlc, MsgHeightDetectConfig_t *msg);
 bool MsgHeightDetectConfig_encode(const MsgHeightDetectConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgHeightDetectConfig_send(const MsgHeightDetectConfig_t *msg);
 
 typedef struct MsgWaterOffsetConfig_t
 {
+    /* [deg] */
     uint16_t WaterOffsetCurrent;
+    /* [deg] */
     uint16_t WaterOffsetDefault;
+    /* [deg] */
     uint16_t WaterOffsetMin;
+    /* [deg] */
     uint16_t WaterOffsetMax;
 } MsgWaterOffsetConfig_t;
 
 bool MsgWaterOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgWaterOffsetConfig_t *msg);
 bool MsgWaterOffsetConfig_encode(const MsgWaterOffsetConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWaterOffsetConfig_send(const MsgWaterOffsetConfig_t *msg);
 
 typedef struct MsgWaterOffset2Config_t
 {
+    /* [deg] */
     uint16_t WaterOffset2Current;
+    /* [deg] */
     uint16_t WaterOffset2Default;
+    /* [deg] */
     uint16_t WaterOffset2Min;
+    /* [deg] */
     uint16_t WaterOffset2Max;
 } MsgWaterOffset2Config_t;
 
 bool MsgWaterOffset2Config_decode(const uint8_t *data, uint8_t dlc, MsgWaterOffset2Config_t *msg);
 bool MsgWaterOffset2Config_encode(const MsgWaterOffset2Config_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWaterOffset2Config_send(const MsgWaterOffset2Config_t *msg);
 
 typedef struct MsgSpeedRaiseConfig_t
 {
@@ -561,6 +648,7 @@ typedef struct MsgSpeedRaiseConfig_t
 
 bool MsgSpeedRaiseConfig_decode(const uint8_t *data, uint8_t dlc, MsgSpeedRaiseConfig_t *msg);
 bool MsgSpeedRaiseConfig_encode(const MsgSpeedRaiseConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgSpeedRaiseConfig_send(const MsgSpeedRaiseConfig_t *msg);
 
 typedef struct MsgSpeedLowerConfig_t
 {
@@ -572,6 +660,7 @@ typedef struct MsgSpeedLowerConfig_t
 
 bool MsgSpeedLowerConfig_decode(const uint8_t *data, uint8_t dlc, MsgSpeedLowerConfig_t *msg);
 bool MsgSpeedLowerConfig_encode(const MsgSpeedLowerConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgSpeedLowerConfig_send(const MsgSpeedLowerConfig_t *msg);
 
 typedef struct MsgNrRowsConfig_t
 {
@@ -583,6 +672,7 @@ typedef struct MsgNrRowsConfig_t
 
 bool MsgNrRowsConfig_decode(const uint8_t *data, uint8_t dlc, MsgNrRowsConfig_t *msg);
 bool MsgNrRowsConfig_encode(const MsgNrRowsConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgNrRowsConfig_send(const MsgNrRowsConfig_t *msg);
 
 typedef struct MsgWheelPositionOffsetConfig_t
 {
@@ -594,6 +684,7 @@ typedef struct MsgWheelPositionOffsetConfig_t
 
 bool MsgWheelPositionOffsetConfig_decode(const uint8_t *data, uint8_t dlc, MsgWheelPositionOffsetConfig_t *msg);
 bool MsgWheelPositionOffsetConfig_encode(const MsgWheelPositionOffsetConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgWheelPositionOffsetConfig_send(const MsgWheelPositionOffsetConfig_t *msg);
 
 typedef struct MsgZAPConfig_t
 {
@@ -603,6 +694,7 @@ typedef struct MsgZAPConfig_t
 
 bool MsgZAPConfig_decode(const uint8_t *data, uint8_t dlc, MsgZAPConfig_t *msg);
 bool MsgZAPConfig_encode(const MsgZAPConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgZAPConfig_send(const MsgZAPConfig_t *msg);
 
 typedef struct MsgSemiautoConfig_t
 {
@@ -611,5 +703,253 @@ typedef struct MsgSemiautoConfig_t
 
 bool MsgSemiautoConfig_decode(const uint8_t *data, uint8_t dlc, MsgSemiautoConfig_t *msg);
 bool MsgSemiautoConfig_encode(const MsgSemiautoConfig_t *msg, uint8_t *data, uint8_t dlc);
+bool MsgSemiautoConfig_send(const MsgSemiautoConfig_t *msg);
+
+/*
+ * Platform glue: every project implements this single function once.
+ * It must transmit one frame and return true when it was accepted.
+ */
+bool CanMessages_Transmit(uint32_t id, bool extended, const uint8_t *data, uint8_t dlc);
+
+/* Last received value per message. Clear Updated after the value is used. */
+typedef struct CanMsgs_t
+{
+    struct
+    {
+        MsgSpeedStatus_t Data;
+        volatile bool Updated;
+    } SpeedStatus;
+    struct
+    {
+        MsgSpeedSourceStatus_t Data;
+        volatile bool Updated;
+    } SpeedSourceStatus;
+    struct
+    {
+        MsgHeightStatus_t Data;
+        volatile bool Updated;
+    } HeightStatus;
+    struct
+    {
+        MsgCounterStatus_t Data;
+        volatile bool Updated;
+    } CounterStatus;
+    struct
+    {
+        MsgMachineStatus_t Data;
+        volatile bool Updated;
+    } MachineStatus;
+    struct
+    {
+        MsgRaiseLowerStatus_t Data;
+        volatile bool Updated;
+    } RaiseLowerStatus;
+    struct
+    {
+        MsgEdgeDetectionStatus_t Data;
+        volatile bool Updated;
+    } EdgeDetectionStatus;
+    struct
+    {
+        MsgAutoControlActive_t Data;
+        volatile bool Updated;
+    } AutoControlActive;
+    struct
+    {
+        MsgPlantWheelSpeed_t Data;
+        volatile bool Updated;
+    } PlantWheelSpeed;
+    struct
+    {
+        MsgSpeedSetpointCommand_t Data;
+        volatile bool Updated;
+    } SpeedSetpointCommand;
+    struct
+    {
+        MsgPlantSpacingCommand_t Data;
+        volatile bool Updated;
+    } PlantSpacingCommand;
+    struct
+    {
+        MsgHeightSetpointCommand_t Data;
+        volatile bool Updated;
+    } HeightSetpointCommand;
+    struct
+    {
+        MsgHeightDetectCommand_t Data;
+        volatile bool Updated;
+    } HeightDetectCommand;
+    struct
+    {
+        MsgWheelCircumCommand_t Data;
+        volatile bool Updated;
+    } WheelCircumCommand;
+    struct
+    {
+        MsgHeightCommand_t Data;
+        volatile bool Updated;
+    } HeightCommand;
+    struct
+    {
+        MsgLiftSpeedCommand_t Data;
+        volatile bool Updated;
+    } LiftSpeedCommand;
+    struct
+    {
+        MsgConfigCommand_t Data;
+        volatile bool Updated;
+    } ConfigCommand;
+    struct
+    {
+        MsgNrRowsCommand_t Data;
+        volatile bool Updated;
+    } NrRowsCommand;
+    struct
+    {
+        MsgWorkWidthCommand_t Data;
+        volatile bool Updated;
+    } WorkWidthCommand;
+    struct
+    {
+        MsgHeightThresholdCommand_t Data;
+        volatile bool Updated;
+    } HeightThresholdCommand;
+    struct
+    {
+        MsgWaterTimeCommand_t Data;
+        volatile bool Updated;
+    } WaterTimeCommand;
+    struct
+    {
+        MsgWaterOffsetCommand_t Data;
+        volatile bool Updated;
+    } WaterOffsetCommand;
+    struct
+    {
+        MsgAutoControlCommand_t Data;
+        volatile bool Updated;
+    } AutoControlCommand;
+    struct
+    {
+        MsgGripIdleCofCommand_t Data;
+        volatile bool Updated;
+    } GripIdleCofCommand;
+    struct
+    {
+        MsgGripIdleOffsetCommand_t Data;
+        volatile bool Updated;
+    } GripIdleOffsetCommand;
+    struct
+    {
+        MsgBeltOffsetCommand_t Data;
+        volatile bool Updated;
+    } BeltOffsetCommand;
+    struct
+    {
+        MsgConfigRequest_t Data;
+        volatile bool Updated;
+    } ConfigRequest;
+    struct
+    {
+        MsgSpeedConfig_t Data;
+        volatile bool Updated;
+    } SpeedConfig;
+    struct
+    {
+        MsgHeightConfig_t Data;
+        volatile bool Updated;
+    } HeightConfig;
+    struct
+    {
+        MsgPlantSpacingConfig_t Data;
+        volatile bool Updated;
+    } PlantSpacingConfig;
+    struct
+    {
+        MsgWaterTimeConfig_t Data;
+        volatile bool Updated;
+    } WaterTimeConfig;
+    struct
+    {
+        MsgWheelCircumConfig_t Data;
+        volatile bool Updated;
+    } WheelCircumConfig;
+    struct
+    {
+        MsgGripperIdleOffsetConfig_t Data;
+        volatile bool Updated;
+    } GripperIdleOffsetConfig;
+    struct
+    {
+        MsgGripperIdleCofConfig_t Data;
+        volatile bool Updated;
+    } GripperIdleCofConfig;
+    struct
+    {
+        MsgBeltOffsetConfig_t Data;
+        volatile bool Updated;
+    } BeltOffsetConfig;
+    struct
+    {
+        MsgGripperIdleOffset2Config_t Data;
+        volatile bool Updated;
+    } GripperIdleOffset2Config;
+    struct
+    {
+        MsgHeightDetectConfig_t Data;
+        volatile bool Updated;
+    } HeightDetectConfig;
+    struct
+    {
+        MsgWaterOffsetConfig_t Data;
+        volatile bool Updated;
+    } WaterOffsetConfig;
+    struct
+    {
+        MsgWaterOffset2Config_t Data;
+        volatile bool Updated;
+    } WaterOffset2Config;
+    struct
+    {
+        MsgSpeedRaiseConfig_t Data;
+        volatile bool Updated;
+    } SpeedRaiseConfig;
+    struct
+    {
+        MsgSpeedLowerConfig_t Data;
+        volatile bool Updated;
+    } SpeedLowerConfig;
+    struct
+    {
+        MsgNrRowsConfig_t Data;
+        volatile bool Updated;
+    } NrRowsConfig;
+    struct
+    {
+        MsgWheelPositionOffsetConfig_t Data;
+        volatile bool Updated;
+    } WheelPositionOffsetConfig;
+    struct
+    {
+        MsgZAPConfig_t Data;
+        volatile bool Updated;
+    } ZAPConfig;
+    struct
+    {
+        MsgSemiautoConfig_t Data;
+        volatile bool Updated;
+    } SemiautoConfig;
+} CanMsgs_t;
+
+extern CanMsgs_t CanMsgs;
+
+/* Number of _send calls rejected because a value was outside its physical range. */
+extern uint32_t CanMessages_RejectedCount;
+
+/*
+ * Decodes a received frame into CanMsgs. Returns true when the frame is a known
+ * message with a valid length. Only decodes, so it is safe to call from an interrupt.
+ */
+bool CanMessages_Receive(uint32_t id, bool extended, const uint8_t *data, uint8_t dlc);
 
 #endif /* CAN_MESSAGES_H */
